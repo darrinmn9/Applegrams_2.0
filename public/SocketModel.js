@@ -13,7 +13,7 @@ var SocketModel = Backbone.Model.extend({
       return false;
     }
 
-    var socket = io.connect('https://rocky-plateau-5853.herokuapp.com/');
+    var socket = io.connect('https://applegrams2.herokuapp.com/');
     // var socket = io.connect('http://localhost:3000');
 
     this.peeling = function() {

@@ -82,6 +82,10 @@ var Board = Backbone.Model.extend({
       $('body').css("pointer-events", "auto");
       $('.start-button').remove();
       $('.start-directions').remove();
+      $('svg').one('click', function() {
+        console.log('remove')
+        $('.click-begin').remove();
+      });
     });
 
 

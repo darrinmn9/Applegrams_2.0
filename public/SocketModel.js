@@ -17,11 +17,11 @@ var SocketModel = Backbone.Model.extend({
 
     this.updateTableInfo = function(userObj) {
       socket.emit('updateTableInfo', userObj);
-    }
+    };
 
     this.startGame = function() {
-      console.log('hi')
-    }
+      socket.emit('startGame');
+    };
 
     //array containing starting pieces
     socket.on('joined', function(startingBoard) {
@@ -37,8 +37,13 @@ var SocketModel = Backbone.Model.extend({
       if (data === 1) {
         context.trigger('host');
       } else {
-        context.trigger('playerWaiting');
+        context.trigger('player');
       }
+    });
+
+    socket.on('startGame', function() {
+      //when hosts clicks start button, other players will get this event trigger
+      context.trigger('startGame');
     });
 
     socket.on('peeled', function(piecesArray) {

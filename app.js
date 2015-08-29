@@ -65,6 +65,10 @@ io.on('connection', function(socket) {
   socket.emit('joined', removePieces(letterPool, 7));
   console.log(letterPool.length);
 
+  socket.on('startGame', function() {
+    socket.broadcast.emit('startGame');
+  })
+
   //broadcast event to other players
   socket.broadcast.emit('another player has joined');
 

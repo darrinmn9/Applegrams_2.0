@@ -3,12 +3,12 @@ var Board = Backbone.Model.extend({
   // this.countLettersLeft
 
   host: function() {
-    $('.start-button').css('display', "auto");
-    $('.start-directions').css('display', "auto");
+    $('.start-button').css('display', "inline");
+    $('.start-directions').css('display', "inline");
   },
 
   playerWaiting: function() {
-    $('.waiting').css('display', "auto");
+    $('.waiting').css('display', "inline");
   },
 
   split: function(letter) {
@@ -37,6 +37,18 @@ var Board = Backbone.Model.extend({
     //creates new instance of socketIO to sync individual client events with server
     this.set('socket', new SocketModel());
     var socket = this.get('socket');
+
+    socket.on('host', function() {
+      context.host();
+    });
+
+    socket.on('startGame', function() {
+
+    });
+
+    socket.on('player', function() {
+      context.playerWaiting();
+    });
 
     $('.user-form').submit(function(event) {
       event.preventDefault();

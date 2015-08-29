@@ -181,7 +181,7 @@ var BoardView = Backbone.View.extend({
               X = Y = 0;
               setTimeout(function() {
                 that.tileIt(true);
-              }, 3000);
+              }, 500);
             } else {
               chop = true;
             }
@@ -236,7 +236,7 @@ var BoardView = Backbone.View.extend({
   completed: function() {
     this.model.peel();
     var that = this;
-    setTimeout(function(){ that.tileIt(true); }, 1000);
+    setTimeout(function(){ that.tileIt(true); }, 500);
   }
 
 });

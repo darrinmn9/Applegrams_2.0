@@ -2,6 +2,16 @@ var BoardView = Backbone.View.extend({
 
   initialize: function() {
     this.render();
+    var context = this;
+
+    this.model.on('change:winningMatrix', function() {
+      context.model.matrix = context.model.get('winningMatrix');
+      console.log('view sees change');
+      setTimeout(function() {
+        context.tileIt();
+      }, 1000)
+    });
+
   },
 
   render: function() {
@@ -236,7 +246,9 @@ var BoardView = Backbone.View.extend({
   completed: function() {
     this.model.peel();
     var that = this;
-    setTimeout(function(){ that.tileIt(true); }, 500);
+    setTimeout(function() {
+      that.tileIt(true);
+    }, 500);
   }
 
 });

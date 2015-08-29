@@ -142,6 +142,7 @@ io.on('connection', function(socket) {
     if (playerCount < 2) {
       console.log('less than 2 players ********')
       letterPool = newGameCopy.slice();
+      letterPool = _.shuffle(letterPool);
       usernames = {};
       lastPeel = false;
       startUpdates = true;

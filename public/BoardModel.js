@@ -32,6 +32,8 @@ var Board = Backbone.Model.extend({
 
     this.storage = {};
 
+    this.set('winningMatrix', []);
+
     //creates new instance of socketIO to sync individual client events with server
     this.set('socket', new SocketModel());
     var socket = this.get('socket');
@@ -173,10 +175,8 @@ var Board = Backbone.Model.extend({
 
     }, this);
 
-    socket.on('lose', function(winngBoard, username) {
-      console.log('loser board model', winngBoard, username);
-      this.winngBoard = winngBoard;
-      this.winner = username;
+    socket.on('lose', function(winningBoard, username) {
+      console.log('loser board model', winningBoard, username);
       $('.final').html(username + ' is the winner!!!!!!!!!!!!');
       $('.final').css({
         'font-size': '30px',
@@ -187,7 +187,7 @@ var Board = Backbone.Model.extend({
 
       $('.show-winner').click(function(event) {
         console.log('clicked for winner')
-        this.matrix = this.winngBoard;
+        context.set('winningMatrix', winningBoard);
         $('.show-winner').remove();
       });
 

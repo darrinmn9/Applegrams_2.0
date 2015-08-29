@@ -11,7 +11,6 @@ var Board = Backbone.Model.extend({
   },
 
   split: function(letter) {
-    console.log('split', letter);
     this.get('socket').splitting(letter);
 
     this.storage.pieces.splice(this.storage.pieces.indexOf(letter), 1);
@@ -46,7 +45,6 @@ var Board = Backbone.Model.extend({
       $('body').css('pointer-events', 'auto');
       $('.click-begin').css('display', "inline");
       $('svg').one('click', function() {
-        console.log('remove')
         $('.click-begin').remove();
       });
     });
@@ -84,7 +82,6 @@ var Board = Backbone.Model.extend({
       $('.start-button').remove();
       $('.start-directions').remove();
       $('svg').one('click', function() {
-        console.log('remove')
         $('.click-begin').remove();
       });
     });
@@ -112,7 +109,6 @@ var Board = Backbone.Model.extend({
     }, this);
 
     socket.on('peel', function(pieceToAdd) {
-      console.log('board piece added', pieceToAdd[this.storage.userId - 1])
       this.addPeel(pieceToAdd[this.storage.userId - 1]);
     }, this);
 
@@ -125,7 +121,6 @@ var Board = Backbone.Model.extend({
     }, this);
 
     socket.on('updateTableInfo', function(tableInfo, lettersLeft) {
-      console.log('updatetable')
       if (lettersLeft < 60 && lettersLeft > 30) {
         $('.pool').css('color', 'orange');
       }
@@ -136,7 +131,7 @@ var Board = Backbone.Model.extend({
 
       $(".table-rows").detach();
 
-      $(".pool").html('Letters remaining:   ' + '<strong>' + lettersLeft + '</strong>');
+      $(".pool").html('Letters remaining:  ' + '<strong>' + lettersLeft + '</strong>');
 
       for (var key in tableInfo) {
         if (key === 'undefined') {
@@ -165,16 +160,39 @@ var Board = Backbone.Model.extend({
     }, this);
 
     socket.on('peelToWin', function() {
+      console.log('board p2win')
+      $('.pool').remove();
+
+      $('<div class="final">LAST PEEL WINS!!!</div>').prependTo('.dashboard-table')
 
     }, this);
 
     socket.on('win', function() {
+      $('.final').html("YOU WIN!!!!!!")
+      socket.sendWinningBoard(this.matrix, this.storage.userId);
 
     }, this);
 
-    socket.on('lose', function(winningBoard) {
+    socket.on('lose', function(winngBoard, username) {
+      console.log('loser board model', winngBoard, username);
+      this.winngBoard = winngBoard;
+      this.winner = username;
+      $('.final').html(username + ' is the winner!!!!!!!!!!!!');
+      $('.final').css({
+        'font-size': '30px',
+        'color': 'blue'
+      });
+
+      $('<button class="show-winner">Click to see winning Board</button>').appendTo('.final');
+
+      $('.show-winner').click(function(event) {
+        console.log('clicked for winner')
+        this.matrix = this.winngBoard;
+        $('.show-winner').remove();
+      });
 
     }, this);
+
 
     socket.on('playerDisconnected', function() {
 

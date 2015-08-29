@@ -38,12 +38,11 @@ function peel(pool) {
 function split(pool, addedPiece) {
   //adds 1 piece, removes (and returns) 3 pieces randomly from the pool
   var result = removePieces(pool, 3);
-  pool.push(addedPiece);
+  pool.splice(_.random(0, pool.length - 1), 0, addedPiece);
   return result;
 }
 
 function peelToWin(pool, players) {
-  console.log(pool.length, players, pool.length < players);
   return pool.length < players ? true : false;
 }
 
@@ -78,8 +77,8 @@ io.on('connection', function(socket) {
 
     //will end the game if peeling event is emitting when pieces < players
     if (lastPeel) {
-      socket.emit('You Win');
-      socket.broadcast.emit('You Lose', ['winner']);
+      socket.emit('Win');
+
     } else {
 
       /*send all users 1 piece. I'm not sure if socket IO allows you to emit a unique message to all users, so
@@ -105,8 +104,8 @@ io.on('connection', function(socket) {
     socket.emit('split', split(letterPool, incomingPiece));
 
     //if splitting caused pieces > players, reset lastPeel to false
-    if (lastPeel && !peelToWin(letterPool, Math.min(playerCount, maxPlayers))) {
-      lastPeel = false;
+    if (peelToWin(letterPool, Math.min(playerCount, maxPlayers))) {
+      lastPeel = true;
     }
   });
 
@@ -116,6 +115,15 @@ io.on('connection', function(socket) {
     }
 
   });
+
+  socket.on('winningBoard', function(winner) {
+    socket.broadcast.emit('Lose', {
+      board: winner.board,
+      username: usernames[winner.userId]['username']
+    });
+
+  });
+
 
   socket.on('disconnect', function() {
     console.log('player disconnected');

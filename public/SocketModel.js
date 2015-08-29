@@ -32,6 +32,14 @@ var SocketModel = Backbone.Model.extend({
       socket.emit('startGame');
     };
 
+    this.sendWinningBoard = function(board, userId) {
+      console.log('client sent winning board', userId);
+      socket.emit('winningBoard', {
+        board: board,
+        userId: userId
+      });
+    }
+
 
 
     //array containing starting pieces
@@ -45,7 +53,6 @@ var SocketModel = Backbone.Model.extend({
 
     //stores unique player ID, used for retrieving peel
     socket.on('userId', function(data) {
-      console.log(data);
       context.userId = data;
       if (data < 11) {
         context.trigger('userId', data);
@@ -77,9 +84,7 @@ var SocketModel = Backbone.Model.extend({
     });
 
     socket.on('dashboardUpdate', function(data, lettersLeft) {
-      console.log(data)
       if (acceptConnection(context.userId)) {
-        console.log('got inside')
         context.trigger('updateTableInfo', data, lettersLeft);
       }
     });
@@ -94,19 +99,20 @@ var SocketModel = Backbone.Model.extend({
       if (acceptConnection(context.userId)) {
         //display "Next peel wins!!!"
         context.trigger('peelToWin');
+        console.log('socket p2win')
       }
     });
 
-    socket.on('You Win', function() {
+    socket.on('Win', function() {
       if (acceptConnection(context.userId)) {
         context.trigger('win');
         console.log('you win')
       }
     });
 
-    socket.on('You Lose', function(winningBoard) {
+    socket.on('Lose', function(winner) {
       if (acceptConnection(context.userId)) {
-        context.trigger('lose', winningBoard);
+        context.trigger('lose', winner.board, winner.username);
         console.log('you lose')
       }
     });

@@ -11,8 +11,8 @@ var io = require('socket.io').listen(server);
 //server files in /public folder
 app.use(express.static(__dirname + '/public'));
 
-//can refactor to randomize the letter pool initialy instead of in each helper function
 var letterPool = ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C', 'D', 'D', 'D', 'D', 'D', 'D', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'F', 'F', 'F', 'G', 'G', 'G', 'G', 'H', 'H', 'H', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'J', 'J', 'K', 'K', 'L', 'L', 'L', 'L', 'L', 'M', 'M', 'M', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'P', 'P', 'P', 'Q', 'Q', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'S', 'S', 'S', 'S', 'S', 'S', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'U', 'U', 'U', 'U', 'U', 'U', 'V', 'V', 'V', 'W', 'W', 'W', 'X', 'X', 'Y', 'Y', 'Y', 'Z', 'Z']
+letterPool = _.shuffle(letterPool);
 var newGameCopy = letterPool.slice();
 var usernames = {};
 var playerCount = 0;
@@ -31,7 +31,7 @@ function removePieces(pool, number) {
 
 function peel(pool) {
   //removes one piece randomly from the pool
-  return pool.splice(_.random(0, pool.length - 1), 1)[0];
+  return pool.pop();
 }
 
 function split(pool, addedPiece) {

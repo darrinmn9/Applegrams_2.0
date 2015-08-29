@@ -45,6 +45,11 @@ var Board = Backbone.Model.extend({
     socket.on('startGame', function() {
       $('.waiting').css('display', "none");
       $('body').css('pointer-events', 'auto');
+      $('.click-begin').css('display', "inline");
+      $('svg').one('click', function() {
+        console.log('remove')
+        $('.click-begin').remove();
+      });
     });
 
     socket.on('player', function() {
@@ -73,6 +78,7 @@ var Board = Backbone.Model.extend({
 
     $('.start-button').click(function(event) {
       socket.startGame();
+      $('.click-begin').css('display', "inline");
       $('body').css("pointer-events", "auto");
       $('.start-button').remove();
       $('.start-directions').remove();

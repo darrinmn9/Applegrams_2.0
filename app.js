@@ -146,6 +146,8 @@ io.on('connection', function(socket) {
       startUpdates = true;
       playerCount = 0;
       clearInterval(timer);
+      io.close();
+      socket_io.listen(server);
     }
   });
 

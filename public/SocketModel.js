@@ -4,7 +4,7 @@ var SocketModel = Backbone.Model.extend({
   initialize: function() {
     var context = this;
 
-    var socket = io.connect('https://rocky-plateau-5853.herokuapp.com/');
+    var socket = io.connect('https://cryptic-peak-5428.herokuapp.com/');
     // var socket = io.connect('http://localhost:3000');
 
     this.peeling = function() {

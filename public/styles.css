@@ -15,3 +15,34 @@ th {
     text-align: left;
 }
 
+body {
+  pointer-events: none;
+}
+
+.user-form-container {
+  pointer-events: auto;
+
+}
+
+.start-button {
+  pointer-events: auto;
+  position:fixed;
+  left: 50%;
+  top: 15%;
+  display: none;
+}
+
+.start-directions {
+  position:fixed;
+  left: 30%;
+  top:5%;
+  display: none;
+}
+
+.waiting {
+  position:fixed;
+  left: 30%;
+  top:5%;
+  display: none;
+}
+

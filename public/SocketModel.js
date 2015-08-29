@@ -19,17 +19,26 @@ var SocketModel = Backbone.Model.extend({
       socket.emit('updateTableInfo', userObj);
     }
 
+    this.startGame = function() {
+      console.log('hi')
+    }
+
     //array containing starting pieces
     socket.on('joined', function(startingBoard) {
-      context.startingPieces = startingBoard;
+      // context.startingPieces = startingBoard;
       context.trigger('joined', startingBoard);
       //trigger show board event
     });
 
     //stores unique player ID, used for retrieving peel
     socket.on('userId', function(data) {
-      context.userId = data;
+      // context.userId = data;
       context.trigger('userId', data);
+      if (data === 1) {
+        context.trigger('host');
+      } else {
+        context.trigger('playerWaiting');
+      }
     });
 
     socket.on('peeled', function(piecesArray) {

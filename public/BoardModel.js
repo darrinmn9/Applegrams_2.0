@@ -1,5 +1,16 @@
 var Board = Backbone.Model.extend({
 
+  // this.countLettersLeft
+
+  host: function() {
+    $('.start-button').css('display', "auto");
+    $('.start-directions').css('display', "auto");
+  },
+
+  playerWaiting: function() {
+    $('.waiting').css('display', "auto");
+  },
+
   split: function(letter) {
     console.log('split', letter);
     this.get('socket').splitting(letter);
@@ -45,6 +56,13 @@ var Board = Backbone.Model.extend({
         context.sendTableInfo(context.storage)
       }, 1000);
 
+    });
+
+    $('.start-button').click(function(event) {
+      socket.startGame();
+      $('body').css("pointer-events", "auto");
+      $('.start-button').remove();
+      $('.start-directions').remove();
     });
 
 

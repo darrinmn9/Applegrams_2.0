@@ -18,6 +18,7 @@ var usernames = {};
 var playerCount = 0;
 var lastPeel = false;
 var startUpdates = true;
+var maxPlayers = 10;
 
 
 function removePieces(pool, number) {
@@ -86,10 +87,10 @@ io.on('connection', function(socket) {
 		  based on the unique identifier given upon original connection
 		  */
 
-      io.emit('peeled', removePieces(letterPool, playerCount));
+      io.emit('peeled', removePieces(letterPool, Math.min(playerCount, maxPlayers)));
 
       // if there are more players than pieces left, alert everyone of last peel!
-      if (peelToWin(letterPool, playerCount)) {
+      if (peelToWin(letterPool, Math.min(playerCount, maxPlayers))) {
         lastPeel = true;
         io.emit('peelToWin', 'Next Peel Wins!!!');
       }
@@ -104,13 +105,16 @@ io.on('connection', function(socket) {
     socket.emit('split', split(letterPool, incomingPiece));
 
     //if splitting caused pieces > players, reset lastPeel to false
-    if (lastPeel && !peelToWin(letterPool, playerCount)) {
+    if (lastPeel && !peelToWin(letterPool, Math.min(playerCount, maxPlayers))) {
       lastPeel = false;
     }
   });
 
   socket.on('updateTableInfo', function(userObj) {
-    usernames[userObj.userId] = userObj;
+    if (userObj !== null) {
+      usernames[userObj.userId] = userObj;
+    }
+
   });
 
   socket.on('disconnect', function() {
@@ -119,7 +123,12 @@ io.on('connection', function(socket) {
     //not sure how to handle if someone leaves the game, should this affect peelToWin?
     if (addUser) {
       playerCount--;
+
+      //need to fix
+
     }
+
+
     socket.broadcast.emit('player disconnected');
     if (playerCount < 1) {
       letterPool = newGameCopy.slice();

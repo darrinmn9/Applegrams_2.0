@@ -4,6 +4,15 @@ var SocketModel = Backbone.Model.extend({
   initialize: function() {
     var context = this;
 
+
+    context.userId;
+    var acceptConnection = function(userId) {
+      if (userId && userId < 11) {
+        return true;
+      }
+      return false;
+    }
+
     // var socket = io.connect('https://rocky-plateau-5853.herokuapp.com/');
     var socket = io.connect('http://localhost:3000');
 
@@ -23,67 +32,91 @@ var SocketModel = Backbone.Model.extend({
       socket.emit('startGame');
     };
 
+
+
     //array containing starting pieces
     socket.on('joined', function(startingBoard) {
-      // context.startingPieces = startingBoard;
-      context.trigger('joined', startingBoard);
-      //trigger show board event
+      if (acceptConnection(context.userId)) {
+        // context.startingPieces = startingBoard;
+        context.trigger('joined', startingBoard);
+        //trigger show board event
+      }
     });
 
     //stores unique player ID, used for retrieving peel
     socket.on('userId', function(data) {
-      // context.userId = data;
-      context.trigger('userId', data);
-      if (data === 1) {
-        context.trigger('host');
-      } else {
-        context.trigger('player');
+      console.log(data);
+      context.userId = data;
+      if (data < 11) {
+        context.trigger('userId', data);
+        if (data === 1) {
+          context.trigger('host');
+        } else {
+          context.trigger('player');
+        }
       }
     });
 
     socket.on('startGame', function() {
-      //when hosts clicks start button, other players will get this event trigger
-      context.trigger('startGame');
+      if (acceptConnection(context.userId)) {
+        //when hosts clicks start button, other players will get this event trigger
+        context.trigger('startGame');
+      }
     });
 
     socket.on('peeled', function(piecesArray) {
-
-      context.trigger('peel', piecesArray);
+      if (acceptConnection(context.userId)) {
+        context.trigger('peel', piecesArray);
+      }
     });
 
     socket.on('split', function(piecesToAdd) {
-      context.trigger('split', piecesToAdd);
+      if (acceptConnection(context.userId)) {
+        context.trigger('split', piecesToAdd);
+      }
     });
 
     socket.on('dashboardUpdate', function(data, lettersLeft) {
       console.log(data)
-      context.trigger('updateTableInfo', data, lettersLeft);
+      if (acceptConnection(context.userId)) {
+        console.log('got inside')
+        context.trigger('updateTableInfo', data, lettersLeft);
+      }
     });
 
     socket.on('another player has joined', function() {
-      context.trigger('playerJoined');
+      if (acceptConnection(context.userId)) {
+        context.trigger('playerJoined');
+      }
     });
 
     socket.on('peelToWin', function() {
-      //display "Next peel wins!!!"
-      context.trigger('peelToWin');
+      if (acceptConnection(context.userId)) {
+        //display "Next peel wins!!!"
+        context.trigger('peelToWin');
+      }
     });
 
     socket.on('You Win', function() {
-      context.trigger('win');
-      console.log('you win')
+      if (acceptConnection(context.userId)) {
+        context.trigger('win');
+        console.log('you win')
+      }
     });
 
     socket.on('You Lose', function(winningBoard) {
-      context.trigger('lose', winningBoard);
-      console.log('you lose')
-
+      if (acceptConnection(context.userId)) {
+        context.trigger('lose', winningBoard);
+        console.log('you lose')
+      }
     });
 
 
     socket.on('player disconnected', function() {
-      console.log('other player disconnected');
-      context.trigger('playerDisconnected');
+      if (acceptConnection(context.userId)) {
+        console.log('other player disconnected');
+        context.trigger('playerDisconnected');
+      }
     });
   }
 

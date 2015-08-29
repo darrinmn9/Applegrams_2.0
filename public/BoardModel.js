@@ -1,6 +1,5 @@
 var Board = Backbone.Model.extend({
 
-  // this.countLettersLeft
 
   host: function() {
     $('.start-button').css('display', "inline");
@@ -70,6 +69,7 @@ var Board = Backbone.Model.extend({
       context.storage.peels = 0;
       context.storage.splits = 0;
 
+
       setInterval(function() {
         context.storage.unplaced = context.countLettersLeft();
         context.sendTableInfo(context.storage);
@@ -125,6 +125,7 @@ var Board = Backbone.Model.extend({
     }, this);
 
     socket.on('updateTableInfo', function(tableInfo, lettersLeft) {
+      console.log('updatetable')
       if (lettersLeft < 60 && lettersLeft > 30) {
         $('.pool').css('color', 'orange');
       }
@@ -138,6 +139,9 @@ var Board = Backbone.Model.extend({
       $(".pool").html('Letters remaining:   ' + '<strong>' + lettersLeft + '</strong>');
 
       for (var key in tableInfo) {
+        if (key === 'undefined') {
+          continue;
+        }
 
         var username = tableInfo[key]['username'];
         var peels = tableInfo[key]['peels'];

@@ -56,7 +56,7 @@ var SocketModel = Backbone.Model.extend({
       context.userId = data;
       if (data < 11) {
         context.trigger('userId', data);
-        if (data === 2) {
+        if (data === 1) {
           context.trigger('host');
         } else {
           context.trigger('player');

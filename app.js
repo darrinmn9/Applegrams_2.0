@@ -6,7 +6,8 @@ var port = process.env.PORT || 3000;
 var server = app.listen(port, function() {
   console.log('Applegrams server is listening on port: ', port);
 });
-var io = require('socket.io').listen(server);
+var socket_io = require('socket.io');
+var io = socket_io.listen(server);
 
 //server files in /public folder
 app.use(express.static(__dirname + '/public'));
@@ -138,13 +139,15 @@ io.on('connection', function(socket) {
 
 
     socket.broadcast.emit('player disconnected');
-    if (playerCount < 1) {
+    if (playerCount < 2) {
       letterPool = newGameCopy.slice();
       usernames = {};
       lastPeel = false;
       startUpdates = true;
       playerCount = 0;
       clearInterval(timer);
+      io.close();
+      socket_io.listen(server);
     }
   });
 

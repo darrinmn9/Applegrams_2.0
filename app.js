@@ -20,6 +20,9 @@ var playerCount = 0;
 var lastPeel = false;
 var startUpdates = true;
 var maxPlayers = 10;
+var gameStarted = false;
+var totalPeopleInGame = 0;
+
 
 
 function removePieces(pool, number) {
@@ -49,22 +52,25 @@ function peelToWin(pool, players) {
 
 io.on('connection', function(socket) {
   console.log('player connected');
-  playerCount++;
-  var addUser = true;
+  totalPeopleInGame++;
+
+  if (!gameStarted) {
+    playerCount++;
+    //send each user a unique identifier
+    socket.emit('userId', playerCount);
+
+    //once a user connects, send them 7 starting pieces
+    socket.emit('joined', removePieces(letterPool, 7));
+    console.log(letterPool.length);
+  }
 
   if (startUpdates && playerCount > 1) {
     startUpdates = false;
     var timer = setInterval(function() {
+      console.log(usernames)
       io.emit('dashboardUpdate', usernames, letterPool.length)
     }, 1000);
   }
-
-  //send each user a unique identifier
-  socket.emit('userId', playerCount);
-
-  //once a user connects, send them 7 starting pieces
-  socket.emit('joined', removePieces(letterPool, 7));
-  console.log(letterPool.length);
 
   if (peelToWin(letterPool, Math.min(playerCount, maxPlayers))) {
     lastPeel = true;
@@ -73,6 +79,7 @@ io.on('connection', function(socket) {
 
   socket.on('startGame', function() {
     socket.broadcast.emit('startGame');
+    gameStarted = true;
   })
 
   //broadcast event to other players
@@ -136,25 +143,21 @@ io.on('connection', function(socket) {
     console.log('player disconnected');
 
     //not sure how to handle if someone leaves the game, should this affect peelToWin?
-    if (addUser) {
-      playerCount--;
-
-      //need to fix
-
-    }
+    totalPeopleInGame--;
 
 
     socket.broadcast.emit('player disconnected');
-    if (playerCount < 2) {
+    if (totalPeopleInGame < 2) {
       console.log('less than 2 players ********')
       letterPool = newGameCopy.slice();
       letterPool = _.shuffle(letterPool);
       usernames = {};
       lastPeel = false;
       startUpdates = true;
+      totalPeopleInGame = 0;
       playerCount = 0;
       clearInterval(timer);
-
+      gameStarted = false;
     }
   });
 

@@ -56,7 +56,7 @@ io.on('connection', function(socket) {
     startUpdates = false;
     var timer = setInterval(function() {
       io.emit('dashboardUpdate', usernames, letterPool.length)
-    }, 3000);
+    }, 1000);
   }
 
   //send each user a unique identifier
@@ -65,6 +65,11 @@ io.on('connection', function(socket) {
   //once a user connects, send them 7 starting pieces
   socket.emit('joined', removePieces(letterPool, 7));
   console.log(letterPool.length);
+
+  if (peelToWin(letterPool, Math.min(playerCount, maxPlayers))) {
+    lastPeel = true;
+    io.emit('peelToWin', 'Next Peel Wins!!!');
+  }
 
   socket.on('startGame', function() {
     socket.broadcast.emit('startGame');
@@ -107,6 +112,7 @@ io.on('connection', function(socket) {
     //if splitting caused pieces > players, reset lastPeel to false
     if (peelToWin(letterPool, Math.min(playerCount, maxPlayers))) {
       lastPeel = true;
+      io.emit('peelToWin', 'Next Peel Wins!!!');
     }
   });
 

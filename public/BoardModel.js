@@ -71,7 +71,8 @@ var Board = Backbone.Model.extend({
       context.storage.splits = 0;
 
       setInterval(function() {
-        context.sendTableInfo(context.storage)
+        context.storage.unplaced = context.countLettersLeft();
+        context.sendTableInfo(context.storage);
       }, 1000);
 
     });
@@ -124,20 +125,29 @@ var Board = Backbone.Model.extend({
     }, this);
 
     socket.on('updateTableInfo', function(tableInfo, lettersLeft) {
+      if (lettersLeft < 60 && lettersLeft > 30) {
+        $('.pool').css('color', 'orange');
+      }
+
+      if (lettersLeft < 30) {
+        $('.pool').css('color', 'red');
+      }
 
       $(".table-rows").detach();
 
-      $(".pool").html('Letters remaining: ' + lettersLeft);
+      $(".pool").html('Letters remaining:   ' + '<strong>' + lettersLeft + '</strong>');
 
       for (var key in tableInfo) {
 
         var username = tableInfo[key]['username'];
         var peels = tableInfo[key]['peels'];
         var splits = tableInfo[key]['splits'];
+        var unplaced = tableInfo[key]['unplaced'];
         var row = $('<tr class="table-rows">' +
           '<td class="user">' + username + '</td>' +
           '<td class="peels">' + peels + '</td>' +
           '<td class="splits">' + splits + '</td>' +
+          '<td class="splits">' + unplaced + '</td>' +
           '< /tr>');
 
 
@@ -303,6 +313,7 @@ var Board = Backbone.Model.extend({
           }
         }
       }
+      this.storage.unplaced = count;
       return count;
     };
 

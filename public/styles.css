@@ -52,3 +52,8 @@ body {
   left: 50%;
   top: 50%;
 }
+
+.pool {
+font-size: 150%;
+color: green;
+}

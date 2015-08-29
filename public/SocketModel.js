@@ -47,22 +47,20 @@ var SocketModel = Backbone.Model.extend({
     });
 
     socket.on('peeled', function(piecesArray) {
-      console.log('the server peeled', piecesArray);
 
       context.trigger('peel', piecesArray);
     });
 
     socket.on('split', function(piecesToAdd) {
-      console.log('split was sent back from server', piecesToAdd);
       context.trigger('split', piecesToAdd);
     });
 
     socket.on('dashboardUpdate', function(data, lettersLeft) {
+      console.log(data)
       context.trigger('updateTableInfo', data, lettersLeft);
     });
 
     socket.on('another player has joined', function() {
-      console.log('another player joined');
       context.trigger('playerJoined');
     });
 
@@ -73,6 +71,7 @@ var SocketModel = Backbone.Model.extend({
 
     socket.on('You Win', function() {
       context.trigger('win');
+      console.log('you win')
     });
 
     socket.on('You Lose', function(winningBoard) {

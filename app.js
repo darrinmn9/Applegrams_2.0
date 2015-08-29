@@ -78,7 +78,7 @@ io.on('connection', function(socket) {
     //will end the game if peeling event is emitting when pieces < players
     if (lastPeel) {
       socket.emit('You Win');
-      socket.broadcast.emit('You Lose' /*show winning player's board*/ );
+      socket.broadcast.emit('You Lose', ['winner']);
     } else {
 
       /*send all users 1 piece. I'm not sure if socket IO allows you to emit a unique message to all users, so

@@ -140,14 +140,13 @@ io.on('connection', function(socket) {
 
     socket.broadcast.emit('player disconnected');
     if (playerCount < 2) {
+      console.log('less than 2 players ********')
       letterPool = newGameCopy.slice();
       usernames = {};
       lastPeel = false;
       startUpdates = true;
       playerCount = 0;
       clearInterval(timer);
-      io.close();
-      socket_io.listen(server);
     }
   });
 

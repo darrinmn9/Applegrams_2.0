@@ -22,6 +22,7 @@ var startUpdates = true;
 var maxPlayers = 10;
 var gameStarted = false;
 var totalPeopleInGame = 0;
+var gameover = false;
 
 
 
@@ -89,8 +90,9 @@ io.on('connection', function(socket) {
     console.log('peeling');
 
     //will end the game if peeling event is emitting when pieces < players
-    if (lastPeel) {
+    if (lastPeel && !gameover) {
       socket.emit('Win');
+      gameover = true;
 
     } else {
 
@@ -131,11 +133,12 @@ io.on('connection', function(socket) {
   });
 
   socket.on('winningBoard', function(winner) {
-    socket.broadcast.emit('Lose', {
-      board: winner.board,
-      username: usernames[winner.userId]['username']
-    });
-
+    if (gameover) {
+      socket.broadcast.emit('Lose', {
+        board: winner.board,
+        username: usernames[winner.userId]['username']
+      });
+    }
   });
 
 
@@ -158,6 +161,7 @@ io.on('connection', function(socket) {
       playerCount = 0;
       clearInterval(timer);
       gameStarted = false;
+      gameover = false;
     }
   });
 

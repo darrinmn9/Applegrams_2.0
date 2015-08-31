@@ -1,4 +1,4 @@
-# Applegrams_2.0
+# Applegrams
 
 Multiplayer game where you must constantly modify and reaarange your board to make words. Purplish-red tiles indicate a legal scrabble word (both horizontally and vertically where applicable). Light blue tiles indicate a vertically invalid scrabble word. Light orange tiles indicate a horizontally invalid scrabble word.
 

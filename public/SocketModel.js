@@ -4,8 +4,7 @@ var SocketModel = Backbone.Model.extend({
   initialize: function() {
     var context = this;
 
-
-    context.userId = undefined;
+    context.userId;
     var acceptConnection = function(userId) {
       if (userId && userId < 11) {
         return true;

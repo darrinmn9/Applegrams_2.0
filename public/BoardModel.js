@@ -140,10 +140,10 @@ var Board = Backbone.Model.extend({
           continue;
         }
 
-        var username = tableInfo[key]['username'];
-        var peels = tableInfo[key]['peels'];
-        var splits = tableInfo[key]['splits'];
-        var unplaced = tableInfo[key]['unplaced'];
+        var username = tableInfo[key].username;
+        var peels = tableInfo[key].peels;
+        var splits = tableInfo[key].splits;
+        var unplaced = tableInfo[key].unplaced;
         var row = $('<tr class="table-rows">' +
           '<td class="user">' + username + '</td>' +
           '<td class="peels">' + peels + '</td>' +
@@ -162,15 +162,15 @@ var Board = Backbone.Model.extend({
     }, this);
 
     socket.on('peelToWin', function() {
-      console.log('board p2win')
+      console.log('board p2win');
       $('.pool').remove();
 
-      $('<div class="final">LAST PEEL WINS!!!</div>').prependTo('.dashboard-table')
+      $('<div class="final">LAST PEEL WINS!!!</div>').prependTo('.dashboard-table');
 
     }, this);
 
     socket.on('win', function() {
-      $('.final').html("YOU WIN!!!!!!")
+      $('.final').html("YOU WIN!!!!!!");
       socket.sendWinningBoard(this.matrix, this.storage.userId);
 
     }, this);
@@ -186,7 +186,7 @@ var Board = Backbone.Model.extend({
       $('<button class="show-winner">Click to see winning Board</button>').appendTo('.final');
 
       $('.show-winner').click(function(event) {
-        console.log('clicked for winner')
+        console.log('clicked for winner');
         context.set('winningMatrix', winningBoard);
         $('.show-winner').remove();
       });
@@ -233,7 +233,7 @@ var Board = Backbone.Model.extend({
           }
         }
       }
-    }
+    };
 
     this.removePiece = function(x, y) {
       var piece = this.letter(x, y);
@@ -420,7 +420,7 @@ var Board = Backbone.Model.extend({
         matrix.push(row);
       }
       return matrix;
-    }
+    };
 
     this.makeBigger = function(type) {
       if (type === 'top') {
@@ -476,7 +476,7 @@ var Board = Backbone.Model.extend({
           }
         }
       }
-    }
+    };
 
     this.frequency = ["A", "A", "A", "A", "A", "A", "A", "A", "A", "B", "B", "C", "C", "D", "D", "D", "D", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "F", "F", "G", "G", "G", "H", "H", "I", "I", "I", "I", "I", "I", "I", "I", "I", "J", "K", "L", "L", "L", "L", "M", "M", "N", "N", "N", "N", "N", "N", "O", "O", "O", "O", "O", "O", "O", "O", "P", "P", "Q", "R", "R", "R", "R", "R", "R", "S", "S", "S", "S", "T", "T", "T", "T", "T", "T", "U", "U", "U", "U", "V", "V", "W", "W", "X", "Y", "Y", "Z"];
     this.randomLetter = function() {

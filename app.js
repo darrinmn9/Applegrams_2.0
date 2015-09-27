@@ -12,7 +12,7 @@ var io = socket_io.listen(server);
 //server files in /public folder
 app.use(express.static(__dirname + '/public'));
 
-var letterPool = ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C', 'D', 'D', 'D', 'D', 'D', 'D', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'F', 'F', 'F', 'G', 'G', 'G', 'G', 'H', 'H', 'H', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'J', 'J', 'K', 'K', 'L', 'L', 'L', 'L', 'L', 'M', 'M', 'M', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'P', 'P', 'P', 'Q', 'Q', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'S', 'S', 'S', 'S', 'S', 'S', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'U', 'U', 'U', 'U', 'U', 'U', 'V', 'V', 'V', 'W', 'W', 'W', 'X', 'X', 'Y', 'Y', 'Y', 'Z', 'Z']
+var letterPool = ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C', 'D', 'D', 'D', 'D', 'D', 'D', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'F', 'F', 'F', 'G', 'G', 'G', 'G', 'H', 'H', 'H', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'J', 'J', 'K', 'K', 'L', 'L', 'L', 'L', 'L', 'M', 'M', 'M', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'P', 'P', 'P', 'Q', 'Q', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'S', 'S', 'S', 'S', 'S', 'S', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'U', 'U', 'U', 'U', 'U', 'U', 'V', 'V', 'V', 'W', 'W', 'W', 'X', 'X', 'Y', 'Y', 'Y', 'Z', 'Z'];
 letterPool = _.shuffle(letterPool);
 var newGameCopy = letterPool.slice();
 var usernames = {};
@@ -68,8 +68,8 @@ io.on('connection', function(socket) {
   if (startUpdates && playerCount > 1) {
     startUpdates = false;
     var timer = setInterval(function() {
-      console.log(usernames)
-      io.emit('dashboardUpdate', usernames, letterPool.length)
+      console.log(usernames);
+      io.emit('dashboardUpdate', usernames, letterPool.length);
     }, 1000);
   }
 
@@ -81,7 +81,7 @@ io.on('connection', function(socket) {
   socket.on('startGame', function() {
     socket.broadcast.emit('startGame');
     gameStarted = true;
-  })
+  });
 
   //broadcast event to other players
   socket.broadcast.emit('another player has joined');
@@ -136,7 +136,7 @@ io.on('connection', function(socket) {
     if (gameover) {
       socket.broadcast.emit('Lose', {
         board: winner.board,
-        username: usernames[winner.userId]['username']
+        username: usernames[winner.userId].username
       });
     }
   });
@@ -151,7 +151,7 @@ io.on('connection', function(socket) {
 
     socket.broadcast.emit('player disconnected');
     if (totalPeopleInGame < 2) {
-      console.log('less than 2 players ********')
+      console.log('less than 2 players ********');
       letterPool = newGameCopy.slice();
       letterPool = _.shuffle(letterPool);
       usernames = {};

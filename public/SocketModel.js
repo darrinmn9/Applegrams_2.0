@@ -4,14 +4,13 @@ var SocketModel = Backbone.Model.extend({
   initialize: function() {
     var context = this;
 
-
     context.userId;
     var acceptConnection = function(userId) {
       if (userId && userId < 11) {
         return true;
       }
       return false;
-    }
+    };
 
     // var socket = io.connect('https://applegrams2.herokuapp.com/');
     var socket = io.connect('http://localhost:3000');
@@ -38,7 +37,7 @@ var SocketModel = Backbone.Model.extend({
         board: board,
         userId: userId
       });
-    }
+    };
 
 
 
@@ -99,21 +98,21 @@ var SocketModel = Backbone.Model.extend({
       if (acceptConnection(context.userId)) {
         //display "Next peel wins!!!"
         context.trigger('peelToWin');
-        console.log('socket p2win')
+        console.log('socket p2win');
       }
     });
 
     socket.on('Win', function() {
       if (acceptConnection(context.userId)) {
         context.trigger('win');
-        console.log('you win')
+        console.log('you win');
       }
     });
 
     socket.on('Lose', function(winner) {
       if (acceptConnection(context.userId)) {
         context.trigger('lose', winner.board, winner.username);
-        console.log('you lose')
+        console.log('you lose');
       }
     });
 
